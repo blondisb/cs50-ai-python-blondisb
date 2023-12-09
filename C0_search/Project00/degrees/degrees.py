@@ -93,7 +93,77 @@ def shortest_path(source, target):
     """
 
     # TODO
-    raise NotImplementedError
+    
+    # path_track = []
+    # sub_list = []
+
+    # frontier = []
+    # frontier += neighbors_for_person(source)
+    # frontier = [node for node in frontier if source not in node]
+    # if frontier is None:
+    #     return None
+    
+    # for node in frontier:
+    #     if target in node:
+    #         return [node]
+        
+    # for node in final_list:
+    #     for sub_node in sub_list:
+    #         path_track += node
+    #         final_list += neighbors_for_person(node[1])
+
+
+    start_node = Node(state=source, parent=None, action=None)
+    frontier = QueueFrontier()
+    frontier.add(start_node)
+
+    nodes_explored = 0  # Qtty of exploref people
+    list_nodes_explored = set()  # Contains explored people
+
+    while True:
+
+        if frontier.empty():
+            return None
+        
+        current_node = frontier.remove()
+        nodes_explored += 1
+        list_nodes_explored.add(current_node.state)
+
+        if current_node.state == target:
+            movies_path = []
+            people_path = []
+            while current_node.parent is not None:
+                movies_path.append(current_node.action)
+                people_path.append(current_node.state)
+                current_node = current_node.parent
+            movies_path.reverse()
+            people_path.reverse()
+            # Return list of pair (path)
+            list_of_pairs = list(zip(movies_path, people_path))
+            return list_of_pairs
+
+        # Find neighbors 
+        list_neighbors = neighbors_for_person(current_node.state)
+    
+        # Add neighbors to frontier
+        for movie, person in list_neighbors:
+            if not frontier.contains_state(person) and person not in list_nodes_explored:
+                child = Node(state=person, parent=current_node, action=movie)
+
+                if child.state == target:
+                    movies_path = []
+                    people_path = []
+                    while child.parent is not None:
+                        movies_path.append(child.action)
+                        people_path.append(child.state)
+                        child = child.parent
+                    movies_path.reverse()
+                    people_path.reverse()
+                    # Return list of pair (path)
+                    list_of_pairs = list(zip(movies_path, people_path))
+                    return list_of_pairs
+
+                frontier.add(child)
 
 
 def person_id_for_name(name):

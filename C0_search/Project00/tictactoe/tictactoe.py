@@ -22,28 +22,24 @@ def player(board):
     """
     Returns player who has the next turn on a board.
     """
-    print('player', board)
-    count = 0
-    for row in board:
-        for element in row:
-            if element == None:
-                count += 1
-                print('player', count)
-    
-    if count == 9:
-        return X
-    elif count % 2 == 0:
+    nones_qtty = sum(row.count(None) for row in board)
+    if nones_qtty % 2 == 0:
         return O
-    else:
-        return X
-
+    return X
 
 
 def actions(board):
     """
     Returns set of all possible actions (i, j) available on the board.
     """
-    raise NotImplementedError
+    moves = set()
+    for i, row in enumerate(board):
+        for j, col in enumerate(row):
+            if col == None:
+                moves.add((i, j))
+    if not moves:
+        return {(0,0)}
+    return moves
 
 
 def result(board, action):

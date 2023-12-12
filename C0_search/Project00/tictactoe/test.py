@@ -101,11 +101,12 @@ if __name__ == "__main__":
     # transponse()
     # main()
 
-    board = [[None, None, None], [None, None, None], [None, None, None]]
+    board = [[1, 2, None], [4, 5, 3], ['X', 'X', None]]
     # print(tictactoe.winner(board))
     # print(tictactoe.terminal(board))
     # print(tictactoe.utility(board))
-    print(tictactoe.result(board, (0,1)))
+    # print(tictactoe.result(board, (0,1)))
+    print(tictactoe.minimax(board))
 
     # print(all_vs_count(board))
     # print(all([1,2,3,2,'l',0]))

@@ -9,6 +9,8 @@ X = "X"
 O = "O"
 EMPTY = None
 rows_n_cols = 3
+moovex = []
+mooveo = []
 
 def initial_state():
     """
@@ -94,7 +96,7 @@ def terminal(board):
     """
     Returns True if game is over, False otherwise.
     """
-    if winner(board) == X or winner(board) == O:
+    if winner(board) is not None:
         return True
     # If I found None, then Any=True, but I need false beacuse None moves still exists. So, I use not().
     return not(any(None in row for row in board))
@@ -116,12 +118,56 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    if terminal(board) is True:
+    if terminal(board):
         return None
     
-    available_moves = actions(board)
+    # if board == initial_state():
+    #     return (2,2)
+     
+    # X try to maximize, O tries to minimize
+    who_play = player(board)
+    move_current = None
 
-    for move in available_moves:
-        v = min(v, result(board, move))
+    if who_play == O:
+        v_current = 99
+        for move in actions(board):
+            v = min_value(result(board, move))
+            if v == -1:
+                return move
+            elif v_current < v:
+                v_current = v_current
+                move_current = move
+        return move_current
+    else:
+        v_current = -99
+        for move in actions(board):
+            v = max_value(result(board, move))
+            if v == 1:
+                return move
+            elif v_current < v:
+                v_current = v_current
+                move_current = move
+        return move_current
 
-    return (0,0)
+
+def min_value(board):
+    v = 99      # Best minimum value
+    if terminal(board):
+        return utility(board)
+    for move in actions(board):
+        v= min(v, max_value(result(board, move)))
+        # Alpha-Beta prunning: If I found the min value, is not necesarry find anymore
+        if v == -1:
+            return v
+    return v
+    
+def max_value(board):
+    v = -99     # Best maximun value
+    if terminal(board):
+        return utility(board)
+    for move in actions(board):
+        v = max(v, min_value(result(board, move)))
+        # Alpha-Beta prunning: If I found the max value, is not necesarry find anymore
+        if v == 1:
+            return v
+    return v

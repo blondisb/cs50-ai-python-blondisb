@@ -133,27 +133,17 @@ def minimax(board):
     if who_play == O:
         v_current = 99
         for move in actions(board):
-
-            # Resulting board, after this move
-            current_board = result(board, move)
-
-            # I made the move, then calculate the futures moves 
-            v = max_value(current_board)
-
-            # Prunnig
+            v = min_value(result(board, move))
             if v == -1:
                 return move
             elif v_current > v:
                 v_current = v
                 move_current = move
         return move_current
-    
     else:
         v_current = -99
         for move in actions(board):
-            current_board = result(board, move)
-            v = min_value(current_board)
-
+            v = max_value(result(board, move))
             if v == 1:
                 return move
             elif v_current < v:

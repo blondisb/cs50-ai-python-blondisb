@@ -1,5 +1,5 @@
 from copy import deepcopy
-import tictactoe
+import tictactoe, anotherdayincali
 
 
 def main():
@@ -101,12 +101,15 @@ if __name__ == "__main__":
     # transponse()
     # main()
 
-    board = [[1, 2, None], [4, 5, 3], ['X', 'X', None]]
+    # board = [[None, 'O', 'O'], ['O', 'X', 'X'], ['X', None, None]]
+    board = [['X', None, None], ['X', 'O', None], [None, None, None]] # Me deja ganar. Yo soy X
+    # board = [['X', 'X', None], [None, 'O', 'X'], ['O', None, None]] # Me deja ganar. Yo soy O
     # print(tictactoe.winner(board))
     # print(tictactoe.terminal(board))
     # print(tictactoe.utility(board))
     # print(tictactoe.result(board, (0,1)))
     print(tictactoe.minimax(board))
+    # print(anotherdayincali.minimax(board))
 
     # print(all_vs_count(board))
     # print(all([1,2,3,2,'l',0]))

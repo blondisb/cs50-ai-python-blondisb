@@ -122,17 +122,17 @@ class CrosswordCreator():
         Return True if a revision was made to the domain of `x`; return
         False if no revision was made.
         """
-        print("\n", "\t", self.domains[x])
-        print("", "\t", self.domains[y])
+        # print("\n", "\t BEFORE", self.domains[x])
+        # print("", "\t Contra", self.domains[y])
 
         overlap = self.crossword.overlaps[x, y]
-        print("\n", "\t", overlap, type(overlap))
+        # print("\n", "\t", overlap, type(overlap))
 
-        if overlap is None:
-            return False
+        revised = False
+        if overlap is None: return revised
         
         i, j = overlap
-        print("\n", "\t", i, j)
+        # print("\n", "\t", i, j)
 
         for word_X in set(self.domains[x]):
             same_value = False
@@ -143,10 +143,9 @@ class CrosswordCreator():
             
             if same_value == False:
                 self.domains[x].remove(word_X)
-                print("\n", "\t", self.domains[x])
-                return True
-        
-        return False
+                # print(" AFTER", "\t", self.domains[x])
+                revised =  True
+        return revised
 
 
     def ac3(self, arcs=None):
@@ -159,7 +158,49 @@ class CrosswordCreator():
         return False if one or more domains end up empty.
         """
 
-        self.revise(Variable(0, 1, 'down', 5), Variable(0, 1, 'across', 3))
+        # self.revise(Variable(0, 1, 'down', 5), Variable(0, 1, 'across', 3))
+
+        if arcs is None:
+            arcs = []
+
+            for varX in self.domains:
+                for varY in self.domains:
+                    if varX != varY and self.crossword.overlaps[varX, varY] and ((varY, varX) not in arcs):
+                        arcs.append((varX, varY))
+
+        # print("\n ac3_1 \t", arcs)
+        while arcs:
+            for arc in arcs:
+                # print("\n", "\t", arc[0], "\n", type(arc))
+                arcs.remove(arc)
+
+                print("\n ac3_2X \t", self.domains[arc[0]], "\t", arc[0])
+                print(" ac3_2Y \t", self.domains[arc[1]], "\t", arc[1])
+
+                if self.revise(arc[0], arc[1]):
+                    if not self.domains[arc[0]]: # if size of X.domain == 0:
+                        return False
+                    
+                    # print("\n ac3_2.2A \t", self.crossword.neighbors(arc[0]))
+                    # print(" ac3_2.2B \t", arc[0])
+                    # print(" ac3_2.2C \t", arc[1])
+
+                    for z in self.crossword.neighbors(arc[0]):
+                        if z != arc[1]:
+                            arcs.append((z, arc[0]))
+
+                # print("\n ac3_2X2 \t", self.domains[arc[0]])
+                # print(" ac3_2Y2 \t", self.domains[arc[1]])
+
+                return True
+                    
+               
+
+
+            
+        
+
+        # self.revise(Variable(0, 1, 'down', 5), Variable(0, 1, 'across', 3))
         # for index, var in enumerate(self.domains):
         #     print(index, var)
             # print(self.domains[index], '\n', self.domains[index+1])
